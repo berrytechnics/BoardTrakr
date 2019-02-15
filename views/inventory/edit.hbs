@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <a href="/inventory/delete/{{data._id}}" class='btn  btn-danger float-right'>Delete Product</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <form class="form-group" action="/inventory/edit" method="post">
+        <input type="hidden" name="_id" value="{{data._id}}">
+        <div class='form-group'>
+          <label for="name">Name</label>
+          <input id='name' type="text" class='form-control' name="name" value="{{data.name}}">
+        </div>
+        <div class='form-group'>
+          <label for="cost">Cost</label>
+          <input id='cost' type="number" class='form-control mb-3' name="cost" value="{{data.cost}}" step='.01'>
+        </div>
+        <div class='form-group'>
+          <label for="cost">Reorder</label>
+          <input id='cost' type="number" class='form-control mb-3' name="reorder" value="{{data.reorder}}" step='1'>
+        </div>
+        <div class='form-group'>
+          <label for="quantity">Quantity</label>
+          <small id="web_help" class="float-right form-text text-muted">Inventory should be brought in by P.O.!</small>
+          <input id='quantity'  type="number" class='form-control mb-3' name="quantity" value="{{data.quantity}}">
+        </div>
+        <input type="submit" class='btn btn-block btn-success float-right mb-3' value="Save">
+      </form>
+    </div>
+  </div>
+</div>

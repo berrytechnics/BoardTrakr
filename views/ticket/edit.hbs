@@ -1,0 +1,199 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <b>Customer</b>
+        </div>
+        <div class="card-body">
+          <small>Company</small>
+          <p><a href="/customer/edit/{{customer._id}}">{{customer.company}}</a></p>
+          <small>Contact</small>
+          <p>{{customer.contact}}</p>
+          <small>Phone</small>
+          <p>{{customer.phone}}</p>
+          <small>Facebook</small>
+          <p> <a href="{{customer.facebook}}" target='_blank'>{{customer.facebook}}</a> </p>
+          <small>Website</small>
+          <p> <a href="{{customer.website}}" target='_blank'> {{customer.website}} </a> </p>
+          <small>Paypal Email</small>
+          <p>{{customer.paypal}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <b>Details</b>
+        </div>
+        <div class="card-body">
+          <small>Opened</small>
+          <p>{{ticket.date}}</p>
+          <small>Make</small>
+          <p>{{ticket.device.make}}</p>
+          <small>Model</small>
+          <p>{{ticket.device.model}}</p>
+          <small>IMEI/Serial</small>
+          <p>{{ticket.device.serial}}</p>
+          <small>Passcode</small>
+          <p>{{ticket.device.passcode}}</p>
+          <small>Ticket Issue</small>
+          <p>{{ticket.issue}}</p>
+          <small>Description</small>
+          <p>{{ticket.description}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+        <b>  Tech Comments</b>
+        </div>
+        <div class="card-body">
+          <ul>
+            {{#each ticket.notes}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <b>Status:</b>
+          <div class="btn-group float-right">
+            <button id='status' type="button" class="btn dropdown-toggle {{ticket.status.class}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ticket.status.status}}
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" id='queue' href="#">In Queue</a>
+              <a class="dropdown-item" id='parts' href="#">Waiting on Parts</a>
+              <a class="dropdown-item" id='progress' href="#">In Progress</a>
+              <a class="dropdown-item" id='customer' href="#">Waiting on Customer</a>
+              <a class="dropdown-item" id='cancel' href="#">Cancelled</a>
+              <a class="dropdown-item" id='complete' href="#">Completed</a>
+            </div>
+          </div>
+          <hr>
+          <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" rows="5" id="comment" name='comment'></textarea>
+            <input type="button" id="submit" value="Submit" class=' mt-3 float-right btn btn-warning'>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <b>Parts</b>
+          <button type="button" class="btn btn-success float-right btn-small" data-toggle="modal" data-target="#exampleModal">
+            Add Parts
+          </button>
+        </div>
+        <div class="card-body">
+          <ul id='partsOnTicket' class='list-group'>
+            {{#each ticket.parts}}
+              <li class='list-group-item'>{{this}} <button type="button" class="btn btn-danger float-right" onclick="socket.emit('removePart',{'part':'{{this}}','ticketID':ticketID})">X</button> </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- BEGIN MODAL -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Search for Parts</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="partScan" class='form-control'>
+        <hr>
+        <div id='partsList'>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END MODAL -->
+
+
+
+
+<script type="text/javascript">
+var ticketID = '{{ticket._id}}'
+  $(document).ready(()=>{
+    $('#partScan').keyup(()=>{
+      socket.emit('partScan',{partName:$('#partScan').val(),ticketID:'{{ticket._id}}'})
+    })
+    socket.on('partScan',parts=>{
+      $('#partsList').html('')
+      parts.forEach(part=>{
+        $('#partsList').append(`
+            <p>${part.name} - ${part.quantity} <button class=' float-right btn btn-sm btn-success' onclick="socket.emit('addPart',{part:'${part.name}',ticketID:'{{ticket._id}}'})">+</button></p>
+          `)
+      })
+    })
+    socket.on('partAdded',part=>{
+      //need to append part to list without page reload
+      $('#partsOnTicket').append("<li class='list-group-item'>"+part+"</li>")
+    })
+    $('#submit').click(()=>{
+      var id = '{{ticket._id}}';
+      var data = {
+        "id":id,
+        "status":$('#status').text(),
+        "notes":$('#comment').val(),
+        "class":$('#status').attr('class')
+      };
+      socket.emit('ticketUpdate',data)
+    })
+
+    socket.on('partRemoved',part=>{
+      $('li:contains("'+part+'")').remove();
+    })
+
+    socket.on('error',data=>{
+      alert('ERROR PLEASE CONTACT SYSTEM ADMIN:',data)
+    })
+    socket.on('success',data=>{
+      window.location.reload();
+    })
+
+    $('#queue').click(()=>{
+      $('#status').text('In Queue').removeClass().addClass('btn btn-primary dropdown-toggle');
+    })
+    $('#parts').click(()=>{
+      $('#status').text('Waiting on Parts').removeClass().addClass('btn btn-secondary dropdown-toggle');
+    })
+    $('#progress').click(()=>{
+      $('#status').text('In Progress').removeClass().addClass('btn btn-info dropdown-toggle');
+    })
+    $('#customer').click(()=>{
+      $('#status').text('Waiting on Customer').removeClass().addClass('btn btn-light dropdown-toggle');
+    })
+    $('#cancel').click(()=>{
+      $('#status').text('Cancelled').removeClass().addClass('btn btn-danger dropdown-toggle');
+    })
+    $('#complete').click(()=>{
+      $('#status').text('Completed').removeClass().addClass('btn btn-success dropdown-toggle');
+    })
+  })
+</script>

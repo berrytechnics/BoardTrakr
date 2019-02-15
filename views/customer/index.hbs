@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="row mb-3">
+    <div class="input-group col">
+          <input class="form-control py-2" type="search" placeholder="search" id="search">
+          <span class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">
+                <i class="fa fa-search"></i>
+            </button>
+          </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <a href="/customer/new" class='btn  btn-success float-right'>New Customer</a>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+
+    {{#each data}}
+    <div class="col-sm mt-3">
+          <div class="card">
+            <div class="card-header">
+              <a href="/customer/edit/{{this._id}}"><b>{{this.company}}</b></a>
+              <a href="/ticket/new/{{this._id}}" class='btn btn-sm btn-warning float-right'>New Ticket</a>
+            </div>
+            <div class="card-body">
+              <ul>
+                <li>{{this.contact}}</li>
+                <li>{{this.phone}}</li>
+                <li> <a target='_blank' href="{{this.facebook}}">{{this.facebook}}</a> </li>
+                <li> <a target='_blank' href="{{this.website}}">{{this.website}}</a> </li>
+                <li> {{this.paypal}} </li>
+                {{#if this.tickets}}
+                <li>
+                  <ul>
+                    {{#each this.tickets}}
+                      <li> <a href="/ticket/{{this._id}}">{{this._id}}</a> </li>
+                    {{/each}}
+                  </ul>
+                </li>
+                {{/if}}
+              </ul>
+            </div>
+          </div>
+    </div>
+    {{/each}}
+
+  </div>
+</div>
+
+<script type="text/javascript" src='/javascripts/search.js'>
+
+</script>
