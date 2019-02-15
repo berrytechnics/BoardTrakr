@@ -44,7 +44,7 @@ Open your browser and navigate to localhost:3000 or 127.0.0.1:3000
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
