@@ -13,12 +13,17 @@ What things you need to install the software and how to install them
 ```
 A PC That can run NODE.JS (dedicated or not)
 
+MongoDB database server URI (We recommend http://mlab.com for testing purposes)
+
 Node.JS  https://www.guru99.com/download-install-node-js.html
 ```
 
 ### Installing
 
 Download the software in the upper-right of the Github page, unzip and open in file explorer.
+
+Once you have your MongoDB URI, open `BoardTrakr\models\db.js` and paste your URI on the second line
+
 hold shift and right click blank space inside the folder, then select "Open command prompt here" or "Open Powershell here" (Node MUST be installed to move forward)
 
 In the resulting terminal, input the following...
