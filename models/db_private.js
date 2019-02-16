@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var mongoDB = "mongodb://admin:password1@ds337985.mlab.com:37985/sandbox"
+var mongoDB = "mongodb://admin:password1@ds133275.mlab.com:33275/boardtrakr";
 mongoose.connect(mongoDB,{ useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
@@ -29,7 +29,7 @@ process.on('SIGINT', function() {
   });
 });
 
-
+// BRING IN YOUR SCHEMAS & MODELS // For example
 require('./../models/customer');
 require('./../models/ticket');
 require('./../models/inventory');
