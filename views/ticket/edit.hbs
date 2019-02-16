@@ -107,6 +107,63 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col">
+      <div class="disclaimer card mt-3">
+        <div class="card-header"><h5>Terms of Service / Warranty</h5></div>
+        <div class="card-body">
+
+          This will be the company disclaimer/warranty agreement stored in db as disclaimer.
+        </div>
+        <div class="card-footer">
+          <h5>Sign Below</h5>
+          <canvas id="signature" width='100%'></canvas>
+          <span class='sigDate'></span><br>
+          <button class="float-right btn btn-sm btn-warning" onclick="signaturePad.clear()">Clear</button>
+          <button disabled class="mr-1 float-right btn btn-sm btn-success" onclick="signatureSave()">Save</button>
+          <br>
+        </div>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+      <script>
+        var canvas = document.getElementById('signature');
+        fitToContainer(canvas);
+        function fitToContainer(canvas){
+          // Make it visually fill the positioned parent
+          canvas.style.width ='100%';
+          canvas.style.height='100%';
+          // ...then set the internal size to match
+          canvas.width  = canvas.offsetWidth;
+          canvas.height = canvas.offsetHeight;
+        }
+        var signaturePad = new SignaturePad(canvas, {
+          minWidth: 1,
+          maxWidth: 5,
+          penColor: "#000000"
+        });
+        function signatureSave(){
+          if(!signaturePad.isEmpty()){
+            $.post( `/tickets/addSignature`,{ticket:'5b14155cd037760014e3c725',signature:signaturePad.toDataURL()},
+            function( result ) {
+              alert( result );
+            });
+          }
+          else alert('Please sign inside box')
+        }
+        $('.removeProduct').click(function(){$(this).parent().parent().remove()})
+        $(document).ready(()=>{
+          var ticketId = $('#ticketId').text()
+          $.get(`/tickets/getSignature/${ticketId}`,data=>{
+            if(!data.err){
+              signaturePad.fromDataURL(data.data)
+              $('.sigDate').html(moment(data.date).format('MM/DD/YYYY hh:mm:ss a'))
+            }
+            else alert(JSON.stringify(data.err))
+          })
+        })
+      </script>
+    </div>
+  </div>
 </div>
 
 
