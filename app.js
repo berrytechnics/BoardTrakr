@@ -7,18 +7,28 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var logger = require('morgan');
 var mongoose = require('mongoose');
+var hbs = require('express-hbs');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
 var db = require('./models/db');
 
 var indexRouter = require('./routes/index');
 var inventoryRouter = require('./routes/inventory');
 var customerRouter = require('./routes/customer');
 var ticketRouter = require('./routes/ticket');
+var userRouter = require('./routes/user');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// Use `.hbs` for extensions and find partials in `views/partials`.
+app.engine('hbs', hbs.express4({
+  partialsDir: __dirname + '/views',
+  defaultLayout:"./views/layout.hbs"
+}));
 app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -33,11 +43,19 @@ app.use(session({
 }))
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(passport.session());
+
+var User = require('./models/user');
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use('/', indexRouter);
 app.use('/inventory', inventoryRouter);
 app.use('/customer', customerRouter);
 app.use('/ticket', ticketRouter);
+app.use('/user',userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
