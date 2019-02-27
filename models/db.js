@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
-var mongoDB = "mongodb://admin:password1@ds337985.mlab.com:37985/sandbox";
+var config = require('../config');
+var mongoDB = config.database.URI;
 mongoose.connect(mongoDB,{ useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;

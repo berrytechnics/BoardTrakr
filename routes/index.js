@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.redirect('/ticket')
   req.flash('warning','There is no home page yet!')
-  res.render('index', { title: 'Express' });
+  res.render('index', {user:req.user});
 });
 
 module.exports = router;

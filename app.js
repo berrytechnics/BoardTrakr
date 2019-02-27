@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var hbs = require('express-hbs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var config = require('./config');
 
 var db = require('./models/db');
 
@@ -37,9 +38,9 @@ app.use(cookieParser('Gadget Pro Tulsa'));
 app.use(session({
     resave: false,
     cookie: { maxAge: 6000000 },
-    secret: 'Gadget Pro Tulsa',
+    secret: config.session.ecret,
     saveUninitialized: true,
-    cookie:{secure:true}
+    cookie:{secure:false} // Need to change to true when site has SSL
 }))
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -72,7 +73,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 
 // allow CORS
 app.all('*', function(req, res, next) {

@@ -8,12 +8,12 @@ router.get('/index',(req,res,next)=>{
     data.forEach(entry=>{
       index.push(entry);
     })
-    res.render('customer/index',{data:index})
+    res.render('customer/index',{data:index,user:req.user})
   })
 })
 
 router.get('/new',(req,res,next)=>{
-  res.render('customer/new')
+  res.render('customer/new',{user:req.user})
 })
 router.post('/new',(req,res,next)=>{
   var data = new customers(req.body);
@@ -25,7 +25,7 @@ router.post('/new',(req,res,next)=>{
 
 router.get('/delete/:id',(req,res,next)=>{
   customers.findByIdAndRemove(req.params.id,err=>{
-    if(err) res.render('error',{error:err})
+    if(err) res.render('error',{error:err,user:req.user})
     else res.redirect('/customer/index')
   })
 })
@@ -33,8 +33,8 @@ router.get('/delete/:id',(req,res,next)=>{
 router.get('/edit/:id',(req,res,next)=>{
   var id = req.params.id;
   customers.findOne({_id:id},(err,data)=>{
-    if (err) res.render('error',{error:err})
-    else res.render('customer/edit',{data:data})
+    if (err) res.render('error',{error:err,user:req.user})
+    else res.render('customer/edit',{data:data,user:req.user})
   })
 })
 router.post('/edit',(req,res,next)=>{
@@ -44,7 +44,7 @@ router.post('/edit',(req,res,next)=>{
       {new: true},
       (err, data) => {
       if (err) {
-         res.render('error',{error:err})
+         res.render('error',{error:err,user:req.user})
       }
       else res.redirect('/customer/index')
     }

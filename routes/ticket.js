@@ -8,14 +8,14 @@ var Ticket = require('../models/ticket');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   Ticket.find({"status.status":{$ne:'Completed',$ne:'Cancelled'}}).then(data=>{
-    res.render('ticket/index',{ticket:data});
+    res.render('ticket/index',{ticket:data,user:req.user});
   })
 });
 
 router.get('/new/:id',(req,res,next)=>{
   Customer.findOne({_id:req.params.id},(err,data)=>{
-  if(err) res.render('error',{error:err})
-  else res.render('ticket/new',{customer:data})
+  if(err) res.render('error',{error:err,user:req.user})
+  else res.render('ticket/new',{customer:data,user:req.user})
   })
 });
 
@@ -41,18 +41,18 @@ router.post('/new',(req,res,next)=>{
   };
   var ticket = new Ticket(data);
   ticket.save(err=>{
-    if(err) res.render('error',{error:err})
+    if(err) res.render('error',{error:err,user:req.user})
     else res.redirect('/ticket/edit/'+ticket._id+'')
   })
 })
 
 router.get('/edit/:id',(req,res,next)=>{
   Ticket.findOne({_id:req.params.id},(err,ticket)=>{
-    if(err) res.render('error',{error:err})
+    if(err) res.render('error',{error:err,user:req.user})
     else{
       Customer.findOne({_id:ticket.customerID},(err,customer)=>{
-        if(err) res.render('error',{error:err});
-        else res.render('ticket/edit',{customer:customer,ticket:ticket})
+        if(err) res.render('error',{error:err,user:req.user});
+        else res.render('ticket/edit',{customer:customer,ticket:ticket,user:req.user})
       })
     }
   })
