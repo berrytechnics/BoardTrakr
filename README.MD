@@ -4,7 +4,7 @@ A Ticketing and Inventory Management System for Microsolder Technicians
 
 ## Demo
 
-[Hosted on Heroku](boardtrakr.herokuapp.com)
+[Hosted on Heroku](http://boardtrakr.herokuapp.com)
 
 ## Getting Started
 
