@@ -1,5 +1,3 @@
-'use strict';
-
 var createError = require('http-errors');
 var flash = require('express-flash');
 var express = require('express');
@@ -39,10 +37,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser('Gadget Pro Tulsa'));
 app.use(session({
     resave: false,
-    cookie: { maxAge: 6000000 },
+    cookie: { maxAge: 6000000, secure:false },
     secret: config.session.ecret,
-    saveUninitialized: true,
-    cookie:{secure:false} // Need to change to true when site has SSL
+    saveUninitialized: true
 }))
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
