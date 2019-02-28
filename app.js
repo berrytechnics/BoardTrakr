@@ -1,3 +1,5 @@
+'use strict';
+
 var createError = require('http-errors');
 var flash = require('express-flash');
 var express = require('express');

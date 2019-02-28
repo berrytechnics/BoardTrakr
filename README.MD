@@ -22,14 +22,14 @@ Node.JS  https://www.guru99.com/download-install-node-js.html
 
 Download the software in the upper-right of the Github page, unzip and open in file explorer.
 
-Once you have your MongoDB URI, open `BoardTrakr\models\db.js` and paste your URI on the second line
+Once you have your MongoDB URI, open `BoardTrakr\config.js` and paste your URI. Edit the rest of the config file to match your company.
 
 hold shift and right click blank space inside the folder, then select "Open command prompt here" or "Open Powershell here" (Node MUST be installed to move forward)
 
 In the resulting terminal, input the following...
 
 ```
-node app.js
+npm install && node app.js
 ```
 
 This will start BoardTrakr with your database on port :3000
